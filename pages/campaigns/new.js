@@ -8,37 +8,46 @@ class CampaignNew extends Component {
   state = {
     minimumContribution: "",
     errorMessage: "",
+    loading: false,
   };
 
-  onsubmit = async (event) => {
+  onSubmit = async (event) => {
     event.preventDefault();
+    this.setState({ loading: true, errorMessage: "" });
+
     try {
       const accounts = await web3.eth.getAccounts();
       await factory.methods
         .createCampaign(this.state.minimumContribution)
-        .send({ from: accounts[0] });
+        .send({
+          from: accounts[0],
+        });
     } catch (err) {
       this.setState({ errorMessage: err.message });
     }
+    this.setState({ loading: false });
   };
+
   render() {
     return (
       <Layout>
-        <h3>New Campaign</h3>
-        <Form onSubmit={this.onsubmit} error={!!this.state.errorMessage}>
+        <h3>Create Campaign</h3>
+        <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
           <Form.Field>
-            <label>Mininum Contribution</label>
+            <label>Minimum Contribution</label>
             <Input
               label="wei"
               labelPosition="right"
               value={this.state.minimumContribution}
-              onChange={(event) => {
-                this.setState({ minimumContribution: event.target.value });
-              }}
+              onChange={(event) =>
+                this.setState({ minimumContribution: event.target.value })
+              }
             />
           </Form.Field>
           <Message error header="Oops!" content={this.state.errorMessage} />
-          <Button primary>Create!</Button>
+          <Button loading={this.state.loading} primary>
+            Create!
+          </Button>
         </Form>
       </Layout>
     );
