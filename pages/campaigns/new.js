@@ -1,16 +1,28 @@
 import React, { Component } from "react";
 import { Form, Button, Input } from "semantic-ui-react";
 import Layout from "../../components/Layout";
+import factory from "../../ethereum/factory";
+import web3 from "../../ethereum/web3";
 
 class CampaignNew extends Component {
   state = {
     minimumContribution: "",
   };
+
+  onsubmit = async (event) => {
+    event.preventDefault();
+
+    const accounts = await web3.eth.getAccounts();
+    await factory.methods
+      .createCampaign(this.state.minimumContribution)
+      .send({ from: accounts[0] });
+    this.setState({ minimumContribution: "" });
+  };
   render() {
     return (
       <Layout>
         <h3>New Campaign</h3>
-        <Form>
+        <Form onSubmit={this.onsubmit}>
           <Form.Field>
             <label>Mininum Contribution</label>
             <Input
