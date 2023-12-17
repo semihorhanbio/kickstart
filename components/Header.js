@@ -13,3 +13,5 @@ const Header = () => {
     </Menu>
   );
 };
+
+export default Header;
