@@ -20,6 +20,7 @@ class CampaignShow extends Component {
   }
 
   renderCards() {
+    console.log(this.props);
     const {
       balance,
       manager,
@@ -37,25 +38,25 @@ class CampaignShow extends Component {
         style: { overflowWrap: "break-word" },
       },
       {
-        header: minimumContribution,
+        header: String(minimumContribution),
         meta: "Minimum Contribution (wei)",
         description:
           "You must contribute at least this much wei to become an approver",
       },
       {
-        header: requestsCount,
+        header: String(requestsCount),
         meta: "Number of Requests",
         description:
           "A request tries to withdraw money from the contract. Requests must be approved by approvers",
       },
       {
-        header: approversCount,
+        header: String(approversCount),
         meta: "Number of Approvers",
         description:
           "Number of people who have already donated to this campaign",
       },
       {
-        header: web3.utils.fromWei(balance, "ether"),
+        header: String(web3.utils.fromWei(balance, "ether")),
         meta: "Campaign Balance (ether)",
         description:
           "The balance is how much money this campaign has left to spend.",
