@@ -2,11 +2,19 @@ import React, { Component } from "react";
 import { Card, Grid, Button } from "semantic-ui-react";
 import { Link } from "../../../routes";
 import Layout from "../../../components/Layout";
+import Campaign from "../../../ethereum/campaign";
 
 class RequestIndex extends Component {
-  static getInitialProps(props) {
+  static async getInitialProps(props) {
     const address = props.query.address;
-    return { address };
+    const campaign = Campaign(address);
+    const requestCount = await campaign.methods.getRequestsCount().call();
+    const requests = Array(requestCount)
+      .fill()
+      .map((element, index) => {
+        return campaign.methods.requests(index).call();
+      });
+    return { address, requests, requestCount };
   }
   render() {
     return (
