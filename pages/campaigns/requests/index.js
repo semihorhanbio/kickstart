@@ -9,7 +9,7 @@ class RequestIndex extends Component {
     const address = props.query.address;
     const campaign = Campaign(address);
     const requestCount = await campaign.methods.getRequestsCount().call();
-    const requests = Array(requestCount)
+    const requests = Array(parseInt(requestCount))
       .fill()
       .map((element, index) => {
         return campaign.methods.requests(index).call();
