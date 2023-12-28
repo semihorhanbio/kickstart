@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table } from "semantic-ui-react";
+import { Table, Button } from "semantic-ui-react";
 import web3 from "../ethereum/web3";
 import Campaign from "../ethereum/campaign";
 class RequestRow extends Component {
@@ -20,8 +20,8 @@ class RequestRow extends Component {
   render() {
     const { Row, Cell } = Table;
     const { id, request, approversCount } = this.props;
-    const readyToFinalize = request.approvalCount > approversCount / 2;
-
+    const readyToFinalize =
+      BigInt(request.approvalCount) > BigInt(approversCount) / BigInt(2);
     return (
       <Row
         disabled={request.complete}

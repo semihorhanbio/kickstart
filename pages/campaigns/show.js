@@ -23,7 +23,6 @@ class CampaignShow extends Component {
   }
 
   renderCards() {
-    console.log(this.props);
     const {
       balance,
       manager,

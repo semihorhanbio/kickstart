@@ -13,9 +13,10 @@ let campaign;
 
 beforeEach(async () => {
   accounts = await web3.eth.getAccounts();
-  factory = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
-    .deploy({ data: compiledFactory.bytecode })
-    .send({ from: accounts[0], gas: "1000000" });
+
+  factory = await new web3.eth.Contract(compiledFactory.abi)
+    .deploy({ data: compiledFactory.evm.bytecode.object })
+    .send({ from: accounts[0], gas: "1400000" });
 
   await factory.methods.createCampaign("100").send({
     from: accounts[0],
@@ -23,11 +24,7 @@ beforeEach(async () => {
   });
 
   [campaignAddress] = await factory.methods.getDeployedCampaigns().call();
-
-  campaign = await new web3.eth.Contract(
-    JSON.parse(compiledCampaign.interface),
-    campaignAddress
-  );
+  campaign = await new web3.eth.Contract(compiledCampaign.abi, campaignAddress);
 });
 
 describe("Campaigns", () => {
@@ -46,9 +43,8 @@ describe("Campaigns", () => {
       value: "200",
       from: accounts[1],
     });
-
-    const isContributer = await campaign.methods.approvers(accounts[1]).call();
-    assert(isContributer);
+    const isContributor = await campaign.methods.approvers(accounts[1]).call();
+    assert(isContributor);
   });
 
   it("requires a minimum contribution", async () => {
@@ -70,8 +66,8 @@ describe("Campaigns", () => {
         from: accounts[0],
         gas: "1000000",
       });
-
     const request = await campaign.methods.requests(0).call();
+
     assert.equal("Buy batteries", request.description);
   });
 
@@ -83,10 +79,7 @@ describe("Campaigns", () => {
 
     await campaign.methods
       .createRequest("A", web3.utils.toWei("5", "ether"), accounts[1])
-      .send({
-        from: accounts[0],
-        gas: "1000000",
-      });
+      .send({ from: accounts[0], gas: "1000000" });
 
     await campaign.methods.approveRequest(0).send({
       from: accounts[0],

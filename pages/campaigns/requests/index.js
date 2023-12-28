@@ -19,6 +19,7 @@ class RequestIndex extends Component {
           return campaign.methods.requests(index).call();
         })
     );
+
     return { address, requests, requestCount, approversCount };
   }
 
@@ -38,6 +39,7 @@ class RequestIndex extends Component {
 
   render() {
     const { Header, Row, HeaderCell, Body } = Table;
+
     return (
       <Layout>
         <h3>Requests</h3>
